@@ -4,7 +4,6 @@ public enum BotState {
 
     ASK_REMINDER,
     ASK_LOCATION,
-    GET_TIMEZONE,
     ASK_DATE,
     ASK_TIME,
     ASK_MESSAGE,

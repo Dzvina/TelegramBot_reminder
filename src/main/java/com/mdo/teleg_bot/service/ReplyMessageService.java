@@ -7,8 +7,11 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 @Service
 public class ReplyMessageService {
 
-    @Autowired
     private LocalMessageService localMessageService;
+
+    public ReplyMessageService(LocalMessageService messageService) {
+        this.localMessageService = messageService;
+    }
 
     public SendMessage getReplyMessage(long chat_id, String replyMessage) {
     return new SendMessage(chat_id,localMessageService.getMessage(replyMessage));

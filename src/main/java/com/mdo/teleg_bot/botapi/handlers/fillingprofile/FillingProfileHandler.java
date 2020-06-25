@@ -4,6 +4,7 @@ import com.mdo.teleg_bot.botapi.BotState;
 import com.mdo.teleg_bot.botapi.InputMessageHandler;
 import com.mdo.teleg_bot.cache.UserDataCache;
 import com.mdo.teleg_bot.client.RestClient;
+import com.mdo.teleg_bot.service.MainMenuService;
 import com.mdo.teleg_bot.service.ReplyMessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +21,14 @@ import java.time.format.DateTimeFormatter;
 public class FillingProfileHandler implements InputMessageHandler {
     private UserDataCache userDataCache;
     private ReplyMessageService messageService;
+    private MainMenuService mainMenuService;
 
     public FillingProfileHandler(UserDataCache userDataCache,
-                                 ReplyMessageService messageService) {
+                                 ReplyMessageService messageService,
+                                 MainMenuService mainMenuService) {
         this.userDataCache = userDataCache;
         this.messageService = messageService;
+        this.mainMenuService = mainMenuService;
     }
 
     @Override
@@ -53,22 +57,22 @@ public class FillingProfileHandler implements InputMessageHandler {
 
         if (botState.equals(BotState.ASK_LOCATION)) {
             replyToUser = messageService.getReplyMessage(chatId, "reply.askLocation");
-            userDataCache.setUsersCurrentBotState(userId, BotState.GET_TIMEZONE);
-        }
-
-        if (botState.equals(BotState.GET_TIMEZONE)) {
-            profileData.setLocation(userAnswer);
-            replyToUser = messageService.getReplyMessage(chatId, "reply.askDate");
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_DATE);
         }
 
         if (botState.equals(BotState.ASK_DATE)) {
-            replyToUser = messageService.getReplyMessage(chatId, "reply.askTime");
-            profileData.setDate(LocalDate.parse(userAnswer, DateTimeFormatter.ofPattern("d/MM/yyyy")));
+            profileData.setLocation(userAnswer);
+            replyToUser = messageService.getReplyMessage(chatId, "reply.askDate");
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_TIME);
         }
 
         if (botState.equals(BotState.ASK_TIME)) {
+            replyToUser = messageService.getReplyMessage(chatId, "reply.askTime");
+            profileData.setDate(LocalDate.parse(userAnswer, DateTimeFormatter.ofPattern("d/MM/yyyy")));
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_MESSAGE);
+        }
+
+        if (botState.equals(BotState.ASK_MESSAGE)) {
             replyToUser = messageService.getReplyMessage(chatId, "reply.askMessage");
             profileData.setTime(LocalTime.parse(userAnswer, DateTimeFormatter.ofPattern("HH:mm")));
             userDataCache.setUsersCurrentBotState(userId, BotState.PROFILE_FILLED);
@@ -77,8 +81,8 @@ public class FillingProfileHandler implements InputMessageHandler {
         if (botState.equals(BotState.PROFILE_FILLED)) {
             profileData.setMessage(userAnswer);
             userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
-            replyToUser = messageService.getReplyMessage(chatId, "reply.profileFilled");
-//            replyToUser= new SendMessage(chatId, String.format("%s %s", "Data on your reminder", profileData));
+            //replyToUser = messageService.getReplyMessage(chatId, "reply.profileFilled");
+            replyToUser =mainMenuService.getMainMenuMessage(chatId, "Profile filled");
         }
 
         userDataCache.saveUserProfileData(userId, profileData);

@@ -32,7 +32,6 @@ public class BotStateContext {
     private boolean isFillingProfileState(BotState currentState){
         switch (currentState){
             case ASK_LOCATION:
-            case GET_TIMEZONE:
             case ASK_DATE:
             case ASK_TIME:
             case ASK_MESSAGE:

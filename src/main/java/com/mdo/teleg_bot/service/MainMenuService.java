@@ -14,12 +14,14 @@ public class MainMenuService {
 
     public SendMessage getMainMenuMessage(final long chatId, final String textMessage) {
         final ReplyKeyboardMarkup replyKeyboardMarkup = getMainMenuKeyboard();
-        final SendMessage mainMenuMessage = createMessageWithKeyboard(chatId, textMessage, replyKeyboardMarkup);
+        final SendMessage mainMenuMessage =
+                createMessageWithKeyboard(chatId, textMessage, replyKeyboardMarkup);
 
         return mainMenuMessage;
     }
 
     private ReplyKeyboardMarkup getMainMenuKeyboard() {
+
         final ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setSelective(true);
         replyKeyboardMarkup.setResizeKeyboard(true);
@@ -34,20 +36,22 @@ public class MainMenuService {
         KeyboardRow row4 = new KeyboardRow();
 
         row1.add(new KeyboardButton("Create new reminder"));
-        row2.add(new KeyboardButton("Add location").setRequestLocation(true));
-        row3.add(new KeyboardButton("My reminders"));
-        row4.add(new KeyboardButton("Help"));
+        row2.add(new KeyboardButton("My reminders"));
+        row3.add(new KeyboardButton("Help"));
+        //row2.add(new KeyboardButton("Add location").setRequestLocation(true));
 
         keyboard.add(row1);
         keyboard.add(row2);
         keyboard.add(row3);
-        keyboard.add(row4);
+        //keyboard.add(row4);
 
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;
     }
 
-    private SendMessage createMessageWithKeyboard(final long chatId, String textMessage, final ReplyKeyboardMarkup replyKeyboardMarkup) {
+    private SendMessage createMessageWithKeyboard(final long chatId,
+                                                  String textMessage,
+                                                  final ReplyKeyboardMarkup replyKeyboardMarkup) {
 
         final SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);

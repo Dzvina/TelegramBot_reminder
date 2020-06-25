@@ -4,16 +4,18 @@ import com.mdo.teleg_bot.botapi.BotState;
 import com.mdo.teleg_bot.botapi.InputMessageHandler;
 import com.mdo.teleg_bot.botapi.handlers.fillingprofile.UserProfileData;
 import com.mdo.teleg_bot.cache.UserDataCache;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
+@Component
 public class ShowProfileHandler implements InputMessageHandler {
     private final static String FINAL_MESSAGE = "Data on your reminder%n" +
             "-------------------%n" +
             "Location: %s%n" +
-            "Date: %d%n" +
+            "Date: %s%n" +
             "Time: %s%n" +
-            "Message: %d%n";
+            "Message: %s%n";
 
     private UserDataCache userDataCache;
 

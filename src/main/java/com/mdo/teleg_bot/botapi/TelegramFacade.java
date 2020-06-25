@@ -35,6 +35,8 @@ public class TelegramFacade {
                     callbackQuery.getFrom().getId(), update.getCallbackQuery().getData());
             return processCallbackQuery(callbackQuery);
         }
+
+
         Message message = update.getMessage();
         if (message != null && message.hasText()) {
             log.info("New message from User:{}, userId: {}, chatId: {},  with text: {}",
@@ -82,6 +84,7 @@ public class TelegramFacade {
         final int userId = buttonQuery.getFrom().getId();
         BotApiMethod<?> callBackAnswer = mainMenuService.getMainMenuMessage(chatId, "Use main menu");
 
+        //From reminder choose buttons
         if (buttonQuery.getData().equals("buttonYes")) {
             callBackAnswer = new SendMessage(chatId, "Write me your time zone. For example: +2");
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_DATE);
