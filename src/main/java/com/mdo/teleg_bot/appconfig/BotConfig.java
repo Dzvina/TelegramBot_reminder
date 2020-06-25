@@ -8,6 +8,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 @Getter
 @Configuration
 @ConfigurationProperties(prefix = "telegrambot")
+@PropertySource("classpath:telegram.properties")
 public class BotConfig {
 
     private String botUserName;
