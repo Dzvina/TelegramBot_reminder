@@ -58,7 +58,7 @@ public class TelegramFacade {
             case "/start":
                 botState = BotState.ASK_REMINDER;
                 break;
-            case "Create a new reminder":
+            case "Create new reminder":
                 botState = BotState.FILLING_PROFILE;
                 break;
             case "My reminders":
