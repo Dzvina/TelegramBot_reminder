@@ -1,4 +1,4 @@
-package com.mdo.teleg_bot.botapi.handlers.askdestiny;
+package com.mdo.teleg_bot.botapi.handlers.askreminder;
 
 import com.mdo.teleg_bot.botapi.BotState;
 import com.mdo.teleg_bot.botapi.InputMessageHandler;
@@ -15,10 +15,10 @@ import java.util.List;
 
 @Slf4j
 @Component
-public class AskDestinyHandler implements InputMessageHandler {
+public class AskReminderHandler implements InputMessageHandler {
     private ReplyMessageService messageService;
 
-    public AskDestinyHandler(ReplyMessageService messageService) {
+    public AskReminderHandler(ReplyMessageService messageService) {
         this.messageService = messageService;
     }
 

@@ -1,5 +1,6 @@
 package com.mdo.teleg_bot.botapi;
 
+import com.mdo.teleg_bot.botapi.handlers.cakendar.Calendar;
 import com.mdo.teleg_bot.cache.UserDataCache;
 import com.mdo.teleg_bot.service.MainMenuService;
 import lombok.extern.slf4j.Slf4j;
@@ -18,11 +19,16 @@ public class TelegramFacade {
     private BotStateContext botStateContext;
     private UserDataCache userDataCache;
     private MainMenuService mainMenuService;
+    private Calendar calendar;
 
-    public TelegramFacade(BotStateContext botStateContext, UserDataCache userDataCache, MainMenuService mainMenuService) {
+    public TelegramFacade(BotStateContext botStateContext,
+                          UserDataCache userDataCache,
+                          MainMenuService mainMenuService,
+                          Calendar calendar) {
         this.botStateContext = botStateContext;
         this.userDataCache = userDataCache;
         this.mainMenuService = mainMenuService;
+        this.calendar = calendar;
     }
 
 
@@ -91,6 +97,10 @@ public class TelegramFacade {
         } else if (buttonQuery.getData().equals("buttonNo")) {
             callBackAnswer = sendAnswerCallbackQuery("Come back when you're ready", false, buttonQuery);
         }
+
+        //From calendar choose month
+//        else if (buttonQuery.getData().equals("Back"))
+//            calendar.
 
         return callBackAnswer;
     }

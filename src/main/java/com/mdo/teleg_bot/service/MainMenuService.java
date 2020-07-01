@@ -38,12 +38,10 @@ public class MainMenuService {
         row1.add(new KeyboardButton("Create new reminder"));
         row2.add(new KeyboardButton("My reminders"));
         row3.add(new KeyboardButton("Help"));
-        //row2.add(new KeyboardButton("Add location").setRequestLocation(true));
 
         keyboard.add(row1);
         keyboard.add(row2);
         keyboard.add(row3);
-        //keyboard.add(row4);
 
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;
