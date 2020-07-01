@@ -69,7 +69,7 @@ public class FillingProfileHandler implements InputMessageHandler {
         if (botState.equals(BotState.ASK_DATE)) {
             profileData.setLocation(userAnswer);
             replyToUser = messageService.getReplyMessage(chatId, "reply.askDate");
-            replyToUser.setReplyMarkup(calendar.getInlineMessageButtons());
+            replyToUser.setReplyMarkup(calendar.getInlineMessageButtons(0,0));
             // userDataCache.setUsersCurrentBotState(userId, BotState.ASK_TIME);
         }
 

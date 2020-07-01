@@ -16,10 +16,10 @@ import java.util.List;
 @Data
 public class Calendar {
     private final static Integer FIRST_DAY = 1;
-    private int month;
-    private int year;
+//    private int month;
+//    private int year;
 
-    public InlineKeyboardMarkup getInlineMessageButtons() {
+    public InlineKeyboardMarkup getInlineMessageButtons(int year, int month) {
         AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery();
         LocalDate localDate = LocalDate.now();
         year = localDate.getYear();
@@ -33,6 +33,7 @@ public class Calendar {
 
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         InlineKeyboardButton currentYear = new InlineKeyboardButton(Integer.toString(year)).setCallbackData("currentYear");
+        InlineKeyboardButton currentMonth = new InlineKeyboardButton(Integer.toString(month)).setCallbackData("currentMonth");
         InlineKeyboardButton buttonBack = new InlineKeyboardButton("<-").setCallbackData("Back");
         InlineKeyboardButton buttonForward = new InlineKeyboardButton("->").setCallbackData("forward");
 
@@ -47,9 +48,11 @@ public class Calendar {
         }
 
         List<List<InlineKeyboardButton>> calendar = new ArrayList<>();
-        List<InlineKeyboardButton> rowYear = new ArrayList<>();
-        rowYear.add(currentYear);
-        calendar.add(rowYear);
+        List<InlineKeyboardButton> rowYearAndMonth = new ArrayList<>();
+        rowYearAndMonth.add(currentYear);
+        rowYearAndMonth.add(currentMonth);
+
+        calendar.add(rowYearAndMonth);
         calendar.add(keyboardButtonsDayOfWeek);
 
 
