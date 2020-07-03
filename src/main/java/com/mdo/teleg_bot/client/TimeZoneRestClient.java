@@ -4,9 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 
 @Component
-public class RestClient {
+public class TimeZoneRestClient {
 
     private static final String TIME_ZONE_PATH = "http://vip.timezonedb.com/v2.1/get-time-zone?key=SQ5J1WNIMTIO&format=xml&by=city&city=";
 
@@ -19,4 +20,6 @@ public class RestClient {
         ResponseEntity<String> stringResponseEntity = restTemplate.getForEntity(url, String.class);
         return stringResponseEntity.getBody();
     }
+
+
 }
