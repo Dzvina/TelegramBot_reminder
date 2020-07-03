@@ -1,6 +1,6 @@
 package com.mdo.teleg_bot.botapi;
 
-import com.mdo.teleg_bot.botapi.handlers.cakendar.Calendar;
+import com.mdo.teleg_bot.botapi.handlers.calendar.Calendar;
 import com.mdo.teleg_bot.cache.UserDataCache;
 import com.mdo.teleg_bot.service.MainMenuService;
 import lombok.extern.slf4j.Slf4j;
@@ -8,9 +8,13 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+
+import java.time.LocalDate;
+import java.time.Year;
 
 @Component
 @Slf4j
@@ -89,6 +93,8 @@ public class TelegramFacade {
         final long chatId = buttonQuery.getMessage().getChatId();
         final int userId = buttonQuery.getFrom().getId();
         BotApiMethod<?> callBackAnswer = mainMenuService.getMainMenuMessage(chatId, "Use main menu");
+        DeleteMessage deleteMessage = new DeleteMessage();
+
 
         //From reminder choose buttons
         if (buttonQuery.getData().equals("buttonYes")) {
@@ -99,9 +105,64 @@ public class TelegramFacade {
         }
 
         //From calendar choose month
-//        else if (buttonQuery.getData().equals("Back"))
-//            calendar.
+        else if (buttonQuery.getData().contains("NEXT_MONTH")) {
+            String response = buttonQuery.getData();
+            String[] responseElements = response.split(";");
+            int year = new Integer(responseElements[1]);
+            int month = new Integer(responseElements[2]);
 
+            if (month == 12) {
+                month = 1;
+                year++;
+            } else {
+                month++;
+            }
+//            deleteMessage
+            SendMessage replyToUser = new SendMessage(chatId, "Choose your date");
+            replyToUser.setReplyMarkup(calendar.getCalendar(year, month));
+            callBackAnswer = replyToUser;
+
+        } else if (buttonQuery.getData().contains("PREVIOUS_MONTH")) {
+            String response = buttonQuery.getData();
+            String[] responseElements = response.split(";");
+            int year = new Integer(responseElements[1]);
+            int month = new Integer(responseElements[2]);
+
+            if (month == 1) {
+                month = 12;
+                year--;
+            } else {
+                month--;
+            }
+            SendMessage replyToUser = new SendMessage(chatId, "Choose your date");
+            replyToUser.setReplyMarkup(calendar.getCalendar(year, month));
+            callBackAnswer = replyToUser;
+        }
+
+
+//        else if(buttonQuery.getData().equals("buttonCalendar")){
+//            LocalDate localDate = LocalDate.now();
+//            int year = localDate.getYear();
+//            int month = localDate.getMonthValue();
+//            SendMessage replyToUser= new SendMessage(chatId,"Choose your date");
+//            replyToUser.setReplyMarkup(calendar.getInlineMessageButtons(year, month));
+//            callBackAnswer = replyToUser;
+//           // callBackAnswer = new SendMessage(chatId, "Enter the reminder time. For example: HH:MM");
+//           // userDataCache.setUsersCurrentBotState(userId, BotState.ASK_MESSAGE);
+//        }
+//        else if (buttonQuery.getData().equals("Back")) {
+//            String fdg = "PREV_MONTH;2020;7;1";
+//            String[] dgd = fdg.split(";");
+//            int year2 = new Integer(dgd[1]);
+//            LocalDate localDate = LocalDate.now();
+//            int year = localDate.getYear();
+//            int month = localDate.getMonthValue();
+//            SendMessage replyToUser= new SendMessage(chatId,"Choose your date");
+//            replyToUser.setReplyMarkup(calendar.getInlineMessageButtons(year, month));
+//            callBackAnswer = replyToUser;
+//           // callBackAnswer = new SendMessage(chatId, "Enter the reminder time. For example: HH:MM");
+//           // userDataCache.setUsersCurrentBotState(userId, BotState.ASK_MESSAGE);
+//        }
         return callBackAnswer;
     }
 

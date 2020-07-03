@@ -2,12 +2,11 @@ package com.mdo.teleg_bot.botapi.handlers.fillingprofile;
 
 import com.mdo.teleg_bot.botapi.BotState;
 import com.mdo.teleg_bot.botapi.InputMessageHandler;
-import com.mdo.teleg_bot.botapi.handlers.cakendar.Calendar;
+import com.mdo.teleg_bot.botapi.handlers.calendar.Calendar;
 import com.mdo.teleg_bot.cache.UserDataCache;
 import com.mdo.teleg_bot.service.MainMenuService;
 import com.mdo.teleg_bot.service.ReplyMessageService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -26,7 +25,7 @@ public class FillingProfileHandler implements InputMessageHandler {
     private UserDataCache userDataCache;
     private ReplyMessageService messageService;
     private MainMenuService mainMenuService;
-    private final Calendar calendar;
+    private Calendar calendar;
 
     public FillingProfileHandler(UserDataCache userDataCache,
                                  ReplyMessageService messageService,
@@ -69,8 +68,8 @@ public class FillingProfileHandler implements InputMessageHandler {
         if (botState.equals(BotState.ASK_DATE)) {
             profileData.setLocation(userAnswer);
             replyToUser = messageService.getReplyMessage(chatId, "reply.askDate");
-            replyToUser.setReplyMarkup(calendar.getInlineMessageButtons(0,0));
-            // userDataCache.setUsersCurrentBotState(userId, BotState.ASK_TIME);
+            replyToUser.setReplyMarkup(calendar.getCalendar(LocalDate.now().getYear(), LocalDate.now().getMonthValue()));
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_TIME);
         }
 
         if (botState.equals(BotState.ASK_TIME)) {
@@ -95,6 +94,5 @@ public class FillingProfileHandler implements InputMessageHandler {
         userDataCache.saveUserProfileData(userId, profileData);
         return replyToUser;
     }
-
 
 }
