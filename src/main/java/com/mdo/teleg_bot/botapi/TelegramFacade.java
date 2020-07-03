@@ -1,6 +1,7 @@
 package com.mdo.teleg_bot.botapi;
 
 import com.mdo.teleg_bot.botapi.handlers.calendar.Calendar;
+import com.mdo.teleg_bot.botapi.handlers.fillingprofile.UserProfileData;
 import com.mdo.teleg_bot.cache.UserDataCache;
 import com.mdo.teleg_bot.client.TelegramRestClient;
 import com.mdo.teleg_bot.client.TimeZoneRestClient;
@@ -14,6 +15,8 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+
+import java.time.LocalDate;
 
 @Component
 @Slf4j
@@ -119,10 +122,10 @@ public class TelegramFacade {
             } else {
                 month++;
             }
-            deleteMessage = new DeleteMessage(String.valueOf(chatId),messadeId);
+            deleteMessage = new DeleteMessage(String.valueOf(chatId), messadeId);
             telegramRestClient.deleteTelegramMessage(deleteMessage);
 
-            SendMessage replyToUser = new SendMessage(chatId, "Enter the reminder date. For example: DD/MM/YYYY");
+            SendMessage replyToUser = new SendMessage(chatId, "Enter the reminder date. For example: DD/MM/YYYY or make your  choice using calendar");
             replyToUser.setReplyMarkup(calendar.getCalendar(year, month));
             callBackAnswer = replyToUser;
 
@@ -138,16 +141,30 @@ public class TelegramFacade {
             } else {
                 month--;
             }
-            deleteMessage = new DeleteMessage(String.valueOf(chatId),messadeId);
+            deleteMessage = new DeleteMessage(String.valueOf(chatId), messadeId);
             telegramRestClient.deleteTelegramMessage(deleteMessage);
 
-            SendMessage replyToUser = new SendMessage(chatId, "Enter the reminder date. For example: DD/MM/YYYY");
+            SendMessage replyToUser = new SendMessage(chatId, "Enter the reminder date. For example: DD/MM/YYYY or make your  choice using calendar");
             replyToUser.setReplyMarkup(calendar.getCalendar(year, month));
             callBackAnswer = replyToUser;
+
+        } else if (buttonQuery.getData().contains("DATE")) {
+            String response = buttonQuery.getData();
+            String[] responseElements = response.split(";");
+            int year = new Integer(responseElements[1]);
+            int month = new Integer(responseElements[2]);
+            int day = new Integer(responseElements[3]);
+
+            LocalDate localDateReminder = LocalDate.of(year, month, day);
+            UserProfileData userProfileData = userDataCache.getUserProfileData(userId);
+            userProfileData.setDate(localDateReminder);
+            userDataCache.saveUserProfileData(userId, userProfileData);
+            callBackAnswer = new SendMessage(chatId, "Enter the reminder time. For example: HH:MM");
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_MESSAGE);
+
+        } else {
+            userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
         }
-
-
-
         return callBackAnswer;
     }
 
@@ -159,3 +176,4 @@ public class TelegramFacade {
         return answerCallbackQuery;
     }
 }
+
