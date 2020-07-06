@@ -33,7 +33,6 @@ public class MainMenuService {
         KeyboardRow row1 = new KeyboardRow();
         KeyboardRow row2 = new KeyboardRow();
         KeyboardRow row3 = new KeyboardRow();
-        KeyboardRow row4 = new KeyboardRow();
 
         row1.add(new KeyboardButton("Create new reminder"));
         row2.add(new KeyboardButton("My reminders"));

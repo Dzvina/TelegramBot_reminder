@@ -4,7 +4,6 @@ import com.mdo.teleg_bot.botapi.handlers.calendar.Calendar;
 import com.mdo.teleg_bot.botapi.handlers.fillingprofile.UserProfileData;
 import com.mdo.teleg_bot.cache.UserDataCache;
 import com.mdo.teleg_bot.client.TelegramRestClient;
-import com.mdo.teleg_bot.client.TimeZoneRestClient;
 import com.mdo.teleg_bot.service.MainMenuService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
