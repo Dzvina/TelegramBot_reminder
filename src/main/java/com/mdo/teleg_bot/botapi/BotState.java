@@ -2,6 +2,7 @@ package com.mdo.teleg_bot.botapi;
 
 public enum BotState {
 
+    GREETING,
     ASK_REMINDER,
     ASK_LOCATION,
     ASK_DATE,
@@ -10,6 +11,6 @@ public enum BotState {
     FILLING_PROFILE,
     PROFILE_FILLED,
     SHOW_USER_PROFILE,
-    SHOW_MAIN_MENU,
+    MENU_CHANGED,
     SHOW_HELP_MENU
 }

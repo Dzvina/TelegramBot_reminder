@@ -17,9 +17,12 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.time.LocalDate;
 
+import static com.mdo.teleg_bot.staticdata.Messages.*;
+
 @Component
 @Slf4j
 public class TelegramFacade {
+
 
     private final TelegramRestClient telegramRestClient;
     private BotStateContext botStateContext;
@@ -68,17 +71,29 @@ public class TelegramFacade {
         SendMessage replyMessage;
 
         switch (inputMsg) {
-            case "/start":
-                botState = BotState.ASK_REMINDER;
+            case START:
+                botState = BotState.GREETING;
                 break;
-            case "Create new reminder":
-                botState = BotState.FILLING_PROFILE;
+            case REMINDER:
+                botState = BotState.MENU_CHANGED;
                 break;
-            case "My reminders":
+            case MY_REMINDERS:
                 botState = BotState.SHOW_USER_PROFILE;
                 break;
-            case "Help":
+            case HELP:
                 botState = BotState.SHOW_HELP_MENU;
+                break;
+            case MY_LOCATION:
+                botState = BotState.ASK_LOCATION;
+                break;
+            case BACK:
+                botState = BotState.MENU_CHANGED;
+                break;
+            case ADD_NEW_REMINDER:
+                botState = BotState.FILLING_PROFILE;
+                break;
+            case SETTINGS:
+                botState = BotState.MENU_CHANGED;
                 break;
             default:
                 botState = userDataCache.getUsersCurrentBotState(userId);
@@ -97,19 +112,11 @@ public class TelegramFacade {
         final int userId = buttonQuery.getFrom().getId();
         final int messadeId = buttonQuery.getMessage().getMessageId();
         BotApiMethod<?> callBackAnswer = mainMenuService.getMainMenuMessage(chatId, "Use main menu");
-        DeleteMessage deleteMessage = new DeleteMessage();
+        DeleteMessage deleteMessage;
 
-
-        //From reminder choose buttons
-        if (buttonQuery.getData().equals("buttonYes")) {
-            callBackAnswer = new SendMessage(chatId, "Write me your time zone. For example: +2");
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_DATE);
-        } else if (buttonQuery.getData().equals("buttonNo")) {
-            callBackAnswer = sendAnswerCallbackQuery("Come back when you're ready", false, buttonQuery);
-        }
 
         //From calendar choose month
-        else if (buttonQuery.getData().contains("NEXT_MONTH")) {
+        if (buttonQuery.getData().contains("NEXT_MONTH")) {
             String response = buttonQuery.getData();
             String[] responseElements = response.split(";");
             int year = new Integer(responseElements[1]);
@@ -162,7 +169,7 @@ public class TelegramFacade {
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_MESSAGE);
 
         } else {
-            userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
+            userDataCache.setUsersCurrentBotState(userId, BotState.MENU_CHANGED);
         }
         return callBackAnswer;
     }

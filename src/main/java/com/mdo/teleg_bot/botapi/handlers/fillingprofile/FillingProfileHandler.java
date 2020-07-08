@@ -82,7 +82,7 @@ public class FillingProfileHandler implements InputMessageHandler {
 
         if (botState.equals(BotState.PROFILE_FILLED)) {
             profileData.setMessage(userAnswer);
-            userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
+            userDataCache.setUsersCurrentBotState(userId, BotState.MENU_CHANGED);
             //replyToUser = messageService.getReplyMessage(chatId, "reply.profileFilled");
             replyToUser = mainMenuService.getMainMenuMessage(chatId, "Profile filled");
         }
