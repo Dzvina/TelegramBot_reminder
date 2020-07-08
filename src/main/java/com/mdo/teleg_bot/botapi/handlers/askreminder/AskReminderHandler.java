@@ -38,6 +38,7 @@ public class AskReminderHandler implements InputMessageHandler {
 
         SendMessage replyToUser = messageService.getReplyMessage(chatId, "reply.askReminder");
         replyToUser.setReplyMarkup(getInlineMessageButtons());
+        //replyToUser.setReplyMarkup(M)
 
         return replyToUser;
     }

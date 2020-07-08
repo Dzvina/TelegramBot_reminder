@@ -46,8 +46,7 @@ public class MainMenuService {
         return replyKeyboardMarkup;
     }
 
-    private SendMessage createMessageWithKeyboard(final long chatId,
-                                                  String textMessage,
+    private SendMessage createMessageWithKeyboard(final long chatId, String textMessage,
                                                   final ReplyKeyboardMarkup replyKeyboardMarkup) {
 
         final SendMessage sendMessage = new SendMessage();
