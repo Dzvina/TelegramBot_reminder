@@ -9,6 +9,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mdo.teleg_bot.staticdata.Messages.*;
+
 @Service
 public class MainMenuService {
 
@@ -20,7 +22,7 @@ public class MainMenuService {
         return mainMenuMessage;
     }
 
-    private ReplyKeyboardMarkup getMainMenuKeyboard() {
+    public static ReplyKeyboardMarkup getMainMenuKeyboard() {
 
         final ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setSelective(true);
@@ -33,24 +35,71 @@ public class MainMenuService {
         KeyboardRow row1 = new KeyboardRow();
         KeyboardRow row2 = new KeyboardRow();
         KeyboardRow row3 = new KeyboardRow();
-        KeyboardRow row4 = new KeyboardRow();
 
-        row1.add(new KeyboardButton("Create new reminder"));
-        row2.add(new KeyboardButton("My reminders"));
-        row3.add(new KeyboardButton("Help"));
-        //row2.add(new KeyboardButton("Add location").setRequestLocation(true));
+        row1.add(new KeyboardButton(REMINDER));
+        row2.add(new KeyboardButton(SETTINGS));
+        row3.add(new KeyboardButton(HELP));
 
         keyboard.add(row1);
         keyboard.add(row2);
         keyboard.add(row3);
-        //keyboard.add(row4);
 
         replyKeyboardMarkup.setKeyboard(keyboard);
         return replyKeyboardMarkup;
     }
 
-    private SendMessage createMessageWithKeyboard(final long chatId,
-                                                  String textMessage,
+    public static ReplyKeyboardMarkup getLocationMenuKeyboard() {
+
+        final ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+
+
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        KeyboardRow row1 = new KeyboardRow();
+        KeyboardRow row2 = new KeyboardRow();
+
+
+        row1.add(new KeyboardButton(MY_LOCATION));
+        row2.add(new KeyboardButton(BACK));
+
+        keyboard.add(row1);
+        keyboard.add(row2);
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
+
+    public static ReplyKeyboardMarkup getReminderMenuKeyboard() {
+
+        final ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setSelective(true);
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+
+
+        List<KeyboardRow> keyboard = new ArrayList<>();
+
+        KeyboardRow row1 = new KeyboardRow();
+        KeyboardRow row2 = new KeyboardRow();
+        KeyboardRow row3 = new KeyboardRow();
+
+
+        row1.add(new KeyboardButton(ADD_NEW_REMINDER));
+        row2.add(new KeyboardButton(MY_REMINDERS));
+        row3.add(new KeyboardButton(BACK));
+
+        keyboard.add(row1);
+        keyboard.add(row2);
+        keyboard.add(row3);
+
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
+
+    private SendMessage createMessageWithKeyboard(final long chatId, String textMessage,
                                                   final ReplyKeyboardMarkup replyKeyboardMarkup) {
 
         final SendMessage sendMessage = new SendMessage();

@@ -28,7 +28,7 @@ public class ShowProfileHandler implements InputMessageHandler {
         final int userId = message.getFrom().getId();
         final UserProfileData profileData = userDataCache.getUserProfileData(userId);
 
-        userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
+        userDataCache.setUsersCurrentBotState(userId, BotState.MENU_CHANGED);
         return new SendMessage(message.getChatId(), String.format(FINAL_MESSAGE, profileData.getLocation(),
                 profileData.getDate(), profileData.getTime(), profileData.getMessage()));
     }

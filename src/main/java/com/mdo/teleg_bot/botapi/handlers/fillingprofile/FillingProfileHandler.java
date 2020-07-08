@@ -2,12 +2,11 @@ package com.mdo.teleg_bot.botapi.handlers.fillingprofile;
 
 import com.mdo.teleg_bot.botapi.BotState;
 import com.mdo.teleg_bot.botapi.InputMessageHandler;
+import com.mdo.teleg_bot.botapi.handlers.calendar.Calendar;
 import com.mdo.teleg_bot.cache.UserDataCache;
-import com.mdo.teleg_bot.client.RestClient;
 import com.mdo.teleg_bot.service.MainMenuService;
 import com.mdo.teleg_bot.service.ReplyMessageService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -22,13 +21,15 @@ public class FillingProfileHandler implements InputMessageHandler {
     private UserDataCache userDataCache;
     private ReplyMessageService messageService;
     private MainMenuService mainMenuService;
+    private Calendar calendar;
 
     public FillingProfileHandler(UserDataCache userDataCache,
                                  ReplyMessageService messageService,
-                                 MainMenuService mainMenuService) {
+                                 MainMenuService mainMenuService, Calendar calendar) {
         this.userDataCache = userDataCache;
         this.messageService = messageService;
         this.mainMenuService = mainMenuService;
+        this.calendar = calendar;
     }
 
     @Override
@@ -63,6 +64,7 @@ public class FillingProfileHandler implements InputMessageHandler {
         if (botState.equals(BotState.ASK_DATE)) {
             profileData.setLocation(userAnswer);
             replyToUser = messageService.getReplyMessage(chatId, "reply.askDate");
+            replyToUser.setReplyMarkup(calendar.getCalendar(LocalDate.now().getYear(), LocalDate.now().getMonthValue()));
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_TIME);
         }
 
@@ -80,12 +82,13 @@ public class FillingProfileHandler implements InputMessageHandler {
 
         if (botState.equals(BotState.PROFILE_FILLED)) {
             profileData.setMessage(userAnswer);
-            userDataCache.setUsersCurrentBotState(userId, BotState.SHOW_MAIN_MENU);
+            userDataCache.setUsersCurrentBotState(userId, BotState.MENU_CHANGED);
             //replyToUser = messageService.getReplyMessage(chatId, "reply.profileFilled");
-            replyToUser =mainMenuService.getMainMenuMessage(chatId, "Profile filled");
+            replyToUser = mainMenuService.getMainMenuMessage(chatId, "Profile filled");
         }
 
         userDataCache.saveUserProfileData(userId, profileData);
         return replyToUser;
     }
+
 }
