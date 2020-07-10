@@ -22,7 +22,7 @@ public class GreetingHandler implements InputMessageHandler {
     public SendMessage handle(Message message) {
 
         SendMessage replyToUser = messageService.getReplyMessage(message.getChatId(), "reply.greeting");
-        replyToUser.setReplyMarkup(mainMenuService.getMainMenuKeyboard());
+        replyToUser.setReplyMarkup(mainMenuService.getLocationMenuKeyboard());
 
         return replyToUser;
     }

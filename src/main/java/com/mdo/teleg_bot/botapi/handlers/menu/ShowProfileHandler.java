@@ -12,7 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 public class ShowProfileHandler implements InputMessageHandler {
     private final static String FINAL_MESSAGE = "Data on your reminder%n" +
             "-------------------%n" +
-            "Location: %s%n" +
+//            "Location: %s%n" +
             "Date: %s%n" +
             "Time: %s%n" +
             "Message: %s%n";
@@ -29,7 +29,7 @@ public class ShowProfileHandler implements InputMessageHandler {
         final UserProfileData profileData = userDataCache.getUserProfileData(userId);
 
         userDataCache.setUsersCurrentBotState(userId, BotState.MENU_CHANGED);
-        return new SendMessage(message.getChatId(), String.format(FINAL_MESSAGE, profileData.getLocation(),
+        return new SendMessage(message.getChatId(), String.format(FINAL_MESSAGE,
                 profileData.getDate(), profileData.getTime(), profileData.getMessage()));
     }
 

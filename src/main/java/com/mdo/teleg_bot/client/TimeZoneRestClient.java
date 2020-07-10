@@ -4,21 +4,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.DeleteMessage;
 
 @Component
 public class TimeZoneRestClient {
 
-    private static final String TIME_ZONE_PATH = "http://vip.timezonedb.com/v2.1/get-time-zone?key=SQ5J1WNIMTIO&format=xml&by=city&city=";
+    private static final String TIME_ZONE_PATH = "https://api.ipgeolocation.io/timezone?apiKey=9f78829c951b441ca68aff20cda6f905&lat=%f&long=%f";
 
     @Autowired
     private RestTemplate restTemplate;
 
-    public String timeZone(String city) {
-        String url = TIME_ZONE_PATH + city;
+    public TimezoneOffsetResponse timeZone(double latitude, double longitude) {
+        String url = String.format(TIME_ZONE_PATH, latitude, longitude);
         System.out.println(url);
-        ResponseEntity<String> stringResponseEntity = restTemplate.getForEntity(url, String.class);
-        return stringResponseEntity.getBody();
+        ResponseEntity<TimezoneOffsetResponse> responseEntity = restTemplate.getForEntity(url, TimezoneOffsetResponse.class);
+        TimezoneOffsetResponse timezoneOffsetResponse = responseEntity.getBody();
+        System.out.println(timezoneOffsetResponse);
+        return timezoneOffsetResponse;
     }
 
 

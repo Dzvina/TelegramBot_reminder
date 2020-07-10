@@ -1,23 +1,23 @@
 package com.mdo.teleg_bot.model;
 
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Data
-@Builder
+//@Builder
 @Entity
-@Table(name = "city")
+@Table(name = "user")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @AllArgsConstructor
-public class City {
+public class User {
 
-    String cityName;
-    double longitude;
-    double latitude;
-    String country;
-
+    long userId;
+    String userLocation;
 }

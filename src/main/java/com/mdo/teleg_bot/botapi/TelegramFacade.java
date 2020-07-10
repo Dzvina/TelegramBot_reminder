@@ -114,9 +114,16 @@ public class TelegramFacade {
         BotApiMethod<?> callBackAnswer = mainMenuService.getMainMenuMessage(chatId, "Use main menu");
         DeleteMessage deleteMessage;
 
+        //From reminder choose buttons
+        if (buttonQuery.getData().equals("buttonYes")) {
+            callBackAnswer = new SendMessage(chatId, "Enter the reminder date. For example: DD/MM/YYYY or make your  choice using calendar");
+            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_TIME);
+        } else if (buttonQuery.getData().equals("buttonNo")) {
+            callBackAnswer = sendAnswerCallbackQuery("Come back when you're ready", false, buttonQuery);
+        }
 
         //From calendar choose month
-        if (buttonQuery.getData().contains("NEXT_MONTH")) {
+        else if (buttonQuery.getData().contains("NEXT_MONTH")) {
             String response = buttonQuery.getData();
             String[] responseElements = response.split(";");
             int year = new Integer(responseElements[1]);

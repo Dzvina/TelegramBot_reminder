@@ -56,13 +56,13 @@ public class FillingProfileHandler implements InputMessageHandler {
 
         SendMessage replyToUser = null;
 
-        if (botState.equals(BotState.ASK_LOCATION)) {
-            replyToUser = messageService.getReplyMessage(chatId, "reply.askLocation");
-            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_DATE);
-        }
+//        if (botState.equals(BotState.ASK_LOCATION)) {
+//            replyToUser = messageService.getReplyMessage(chatId, "reply.askLocation");
+//            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_DATE);
+//        }
 
         if (botState.equals(BotState.ASK_DATE)) {
-            profileData.setLocation(userAnswer);
+            //profileData.setLocation(userAnswer);
             replyToUser = messageService.getReplyMessage(chatId, "reply.askDate");
             replyToUser.setReplyMarkup(calendar.getCalendar(LocalDate.now().getYear(), LocalDate.now().getMonthValue()));
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_TIME);
