@@ -32,8 +32,8 @@ public class CityDataInserter {
                 String line = scanner.nextLine();
                 String[] responseElements = line.split(SEPARATOR);
                 preparedStatement.setString(1, responseElements[0]);
-                preparedStatement.setString(3, responseElements[1]);
                 preparedStatement.setString(2, responseElements[2]);
+                preparedStatement.setString(3, responseElements[1]);
                 preparedStatement.setString(4, responseElements[3]);
 
                 preparedStatement.executeUpdate();

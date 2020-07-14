@@ -9,7 +9,6 @@ import com.mdo.teleg_bot.dao.UserDao;
 import com.mdo.teleg_bot.model.City;
 import com.mdo.teleg_bot.model.User;
 import com.mdo.teleg_bot.service.ReplyMessageService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -40,19 +39,26 @@ public class LocationMenu implements InputMessageHandler {
     @Override
     public SendMessage handle(Message message) {
         SendMessage replyToUser = null;
+        User user = userDao.getUserByUserId(message.getFrom().getId());
 
         if (message.getText().equals(MY_LOCATION)) {
             replyToUser = messageService.getReplyMessage(message.getChatId(), "reply.askLocation");
         } else {
             City city = cityDao.getCityByCityName(message.getText());
             TimezoneOffsetResponse timezoneOffsetResponse = timeZoneRestClient.timeZone(city.getLatitude(), city.getLongitude());
-            System.out.println(city.getLongitude() +"     "+ city.getLatitude());
-            User user = new User();
-            user.setUserLocation(timezoneOffsetResponse.getTimezoneOffset());
-            user.setUserId(message.getFrom().getId());
-            userDao.insertUserLocation(user);
-            replyToUser = messageService.getReplyMessage(message.getChatId(), "reply.askReminder");
-            replyToUser.setReplyMarkup(getInlineMessageButtons());
+            if(user != null){
+                userDao.updateUserByUserId(message.getFrom().getId(),timezoneOffsetResponse.getTimezoneOffset());
+                replyToUser = messageService.getReplyMessage(message.getChatId(), "reply.askReminder");
+                replyToUser.setReplyMarkup(getInlineMessageButtons());
+            }else{
+                System.out.println(city.getLongitude() + "     " + city.getLatitude());
+                user = new User();
+                user.setUserLocation(timezoneOffsetResponse.getTimezoneOffset());
+                user.setUserId(message.getFrom().getId());
+                userDao.insertUserLocation(user);
+                replyToUser = messageService.getReplyMessage(message.getChatId(), "reply.askReminder");
+                replyToUser.setReplyMarkup(getInlineMessageButtons());
+            }
         }
         return replyToUser;
     }

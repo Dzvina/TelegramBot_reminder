@@ -111,12 +111,15 @@ public class TelegramFacade {
         final long chatId = buttonQuery.getMessage().getChatId();
         final int userId = buttonQuery.getFrom().getId();
         final int messadeId = buttonQuery.getMessage().getMessageId();
+        SendMessage replyToUser;
         BotApiMethod<?> callBackAnswer = mainMenuService.getMainMenuMessage(chatId, "Use main menu");
         DeleteMessage deleteMessage;
 
         //From reminder choose buttons
         if (buttonQuery.getData().equals("buttonYes")) {
-            callBackAnswer = new SendMessage(chatId, "Enter the reminder date. For example: DD/MM/YYYY or make your  choice using calendar");
+            replyToUser = new SendMessage(chatId, "Enter the reminder date. For example: DD/MM/YYYY or make your  choice using calendar");
+            replyToUser.setReplyMarkup(calendar.getCalendar(LocalDate.now().getYear(), LocalDate.now().getMonthValue()));
+            callBackAnswer = replyToUser;
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_TIME);
         } else if (buttonQuery.getData().equals("buttonNo")) {
             callBackAnswer = sendAnswerCallbackQuery("Come back when you're ready", false, buttonQuery);
@@ -138,7 +141,7 @@ public class TelegramFacade {
             deleteMessage = new DeleteMessage(String.valueOf(chatId), messadeId);
             telegramRestClient.deleteTelegramMessage(deleteMessage);
 
-            SendMessage replyToUser = new SendMessage(chatId, "Enter the reminder date. For example: DD/MM/YYYY or make your  choice using calendar");
+            replyToUser = new SendMessage(chatId, "Enter the reminder date. For example: DD/MM/YYYY or make your  choice using calendar");
             replyToUser.setReplyMarkup(calendar.getCalendar(year, month));
             callBackAnswer = replyToUser;
 
@@ -157,7 +160,7 @@ public class TelegramFacade {
             deleteMessage = new DeleteMessage(String.valueOf(chatId), messadeId);
             telegramRestClient.deleteTelegramMessage(deleteMessage);
 
-            SendMessage replyToUser = new SendMessage(chatId, "Enter the reminder date. For example: DD/MM/YYYY or make your  choice using calendar");
+            replyToUser = new SendMessage(chatId, "Enter the reminder date. For example: DD/MM/YYYY or make your  choice using calendar");
             replyToUser.setReplyMarkup(calendar.getCalendar(year, month));
             callBackAnswer = replyToUser;
 
