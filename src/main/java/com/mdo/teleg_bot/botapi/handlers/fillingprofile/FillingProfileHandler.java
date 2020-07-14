@@ -4,6 +4,8 @@ import com.mdo.teleg_bot.botapi.BotState;
 import com.mdo.teleg_bot.botapi.InputMessageHandler;
 import com.mdo.teleg_bot.botapi.handlers.calendar.Calendar;
 import com.mdo.teleg_bot.cache.UserDataCache;
+import com.mdo.teleg_bot.dao.ReminderDao;
+import com.mdo.teleg_bot.model.Reminder;
 import com.mdo.teleg_bot.service.MainMenuService;
 import com.mdo.teleg_bot.service.ReplyMessageService;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 @Component
 public class FillingProfileHandler implements InputMessageHandler {
+    private ReminderDao reminderDao;
     private UserDataCache userDataCache;
     private ReplyMessageService messageService;
     private MainMenuService mainMenuService;
@@ -25,11 +28,12 @@ public class FillingProfileHandler implements InputMessageHandler {
 
     public FillingProfileHandler(UserDataCache userDataCache,
                                  ReplyMessageService messageService,
-                                 MainMenuService mainMenuService, Calendar calendar) {
+                                 MainMenuService mainMenuService, Calendar calendar, ReminderDao reminderDao) {
         this.userDataCache = userDataCache;
         this.messageService = messageService;
         this.mainMenuService = mainMenuService;
         this.calendar = calendar;
+        this.reminderDao = reminderDao;
     }
 
     @Override
@@ -51,18 +55,12 @@ public class FillingProfileHandler implements InputMessageHandler {
         int userId = inputMsg.getFrom().getId();
         long chatId = inputMsg.getChatId();
 
-        UserProfileData profileData = userDataCache.getUserProfileData(userId);
+        Reminder reminder = userDataCache.getReminder(userId);
         BotState botState = userDataCache.getUsersCurrentBotState(userId);
 
         SendMessage replyToUser = null;
 
-//        if (botState.equals(BotState.ASK_LOCATION)) {
-//            replyToUser = messageService.getReplyMessage(chatId, "reply.askLocation");
-//            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_DATE);
-//        }
-
         if (botState.equals(BotState.ASK_DATE)) {
-            //profileData.setLocation(userAnswer);
             replyToUser = messageService.getReplyMessage(chatId, "reply.askDate");
             replyToUser.setReplyMarkup(calendar.getCalendar(LocalDate.now().getYear(), LocalDate.now().getMonthValue()));
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_TIME);
@@ -70,24 +68,25 @@ public class FillingProfileHandler implements InputMessageHandler {
 
         if (botState.equals(BotState.ASK_TIME)) {
             replyToUser = messageService.getReplyMessage(chatId, "reply.askTime");
-            profileData.setDate(LocalDate.parse(userAnswer, DateTimeFormatter.ofPattern("d/MM/yyyy")));
+            reminder.setDate(LocalDate.parse(userAnswer, DateTimeFormatter.ofPattern("d/MM/yyyy")));
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_MESSAGE);
         }
 
         if (botState.equals(BotState.ASK_MESSAGE)) {
             replyToUser = messageService.getReplyMessage(chatId, "reply.askMessage");
-            profileData.setTime(LocalTime.parse(userAnswer, DateTimeFormatter.ofPattern("HH:mm")));
+            reminder.setTime(LocalTime.parse(userAnswer, DateTimeFormatter.ofPattern("HH:mm")));
             userDataCache.setUsersCurrentBotState(userId, BotState.PROFILE_FILLED);
         }
 
         if (botState.equals(BotState.PROFILE_FILLED)) {
-            profileData.setMessage(userAnswer);
+            reminder.setMessage(userAnswer);
             userDataCache.setUsersCurrentBotState(userId, BotState.MENU_CHANGED);
-            //replyToUser = messageService.getReplyMessage(chatId, "reply.profileFilled");
+            reminderDao.addNewReminder(reminder);
             replyToUser = mainMenuService.getMainMenuMessage(chatId, "Profile filled");
+
         }
 
-        userDataCache.saveUserProfileData(userId, profileData);
+        userDataCache.saveReminder(userId, reminder);
         return replyToUser;
     }
 

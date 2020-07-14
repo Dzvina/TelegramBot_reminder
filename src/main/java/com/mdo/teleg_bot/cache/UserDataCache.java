@@ -1,7 +1,7 @@
 package com.mdo.teleg_bot.cache;
 
 import com.mdo.teleg_bot.botapi.BotState;
-import com.mdo.teleg_bot.botapi.handlers.fillingprofile.UserProfileData;
+import com.mdo.teleg_bot.model.Reminder;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -10,7 +10,7 @@ import java.util.Map;
 @Component
 public class UserDataCache implements DataCache {
     private Map<Integer, BotState> usersBotStates = new HashMap<>();
-    private Map<Integer, UserProfileData> usersProfileData = new HashMap<>();
+    private Map<Long, Reminder> reminderCache = new HashMap<>();
 
     @Override
     public void setUsersCurrentBotState(int userId, BotState botState) {
@@ -23,22 +23,21 @@ public class UserDataCache implements DataCache {
         if (botState == null) {
             botState = BotState.ASK_REMINDER;
         }
-
         return botState;
     }
 
-
     @Override
-    public UserProfileData getUserProfileData(int userId) {
-        UserProfileData userProfileData = usersProfileData.get(userId);
-        if (userProfileData == null) {
-            userProfileData = new UserProfileData();
+    public Reminder getReminder(long userId) {
+        Reminder reminder = reminderCache.get(userId);
+        if (reminder == null) {
+            reminder = new Reminder();
         }
-        return userProfileData;
+        return reminder;
     }
 
     @Override
-    public void saveUserProfileData(int userId, UserProfileData userProfileData) {
-        usersProfileData.put(userId, userProfileData);
+    public void saveReminder(long userId, Reminder reminder) {
+        reminderCache.put(userId, reminder);
     }
+
 }

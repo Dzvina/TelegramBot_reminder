@@ -1,9 +1,9 @@
 package com.mdo.teleg_bot.botapi;
 
 import com.mdo.teleg_bot.botapi.handlers.calendar.Calendar;
-import com.mdo.teleg_bot.botapi.handlers.fillingprofile.UserProfileData;
 import com.mdo.teleg_bot.cache.UserDataCache;
 import com.mdo.teleg_bot.client.TelegramRestClient;
+import com.mdo.teleg_bot.model.Reminder;
 import com.mdo.teleg_bot.service.MainMenuService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -78,7 +78,7 @@ public class TelegramFacade {
                 botState = BotState.MENU_CHANGED;
                 break;
             case MY_REMINDERS:
-                botState = BotState.SHOW_USER_PROFILE;
+                botState = BotState.SHOW_REMINDER;
                 break;
             case HELP:
                 botState = BotState.SHOW_HELP_MENU;
@@ -172,9 +172,9 @@ public class TelegramFacade {
             int day = new Integer(responseElements[3]);
 
             LocalDate localDateReminder = LocalDate.of(year, month, day);
-            UserProfileData userProfileData = userDataCache.getUserProfileData(userId);
-            userProfileData.setDate(localDateReminder);
-            userDataCache.saveUserProfileData(userId, userProfileData);
+            Reminder reminder = userDataCache.getReminder(userId);
+            reminder.setDate(localDateReminder);
+            userDataCache.saveReminder(userId, reminder);
             callBackAnswer = new SendMessage(chatId, "Enter the reminder time. For example: HH:MM");
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_MESSAGE);
 

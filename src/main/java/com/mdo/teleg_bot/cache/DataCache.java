@@ -1,7 +1,7 @@
 package com.mdo.teleg_bot.cache;
 
 import com.mdo.teleg_bot.botapi.BotState;
-import com.mdo.teleg_bot.botapi.handlers.fillingprofile.UserProfileData;
+import com.mdo.teleg_bot.model.Reminder;
 
 public interface DataCache {
 
@@ -9,8 +9,8 @@ public interface DataCache {
 
     BotState getUsersCurrentBotState(int userId);
 
-    UserProfileData getUserProfileData(int userId);
+    Reminder getReminder(long userId);
 
-    void saveUserProfileData(int userId, UserProfileData userProfileData);
+    void saveReminder(long userId, Reminder reminder);
 
 }
