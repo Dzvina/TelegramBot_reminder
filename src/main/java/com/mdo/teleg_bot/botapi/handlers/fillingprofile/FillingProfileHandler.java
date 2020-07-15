@@ -60,6 +60,10 @@ public class FillingProfileHandler implements InputMessageHandler {
 
         SendMessage replyToUser = null;
 
+//        if(botState.equals(BotState.FILLING_PROFILE)){
+//            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_DATE);
+//        }
+
         if (botState.equals(BotState.ASK_DATE)) {
             replyToUser = messageService.getReplyMessage(chatId, "reply.askDate");
             replyToUser.setReplyMarkup(calendar.getCalendar(LocalDate.now().getYear(), LocalDate.now().getMonthValue()));
@@ -81,9 +85,11 @@ public class FillingProfileHandler implements InputMessageHandler {
         if (botState.equals(BotState.PROFILE_FILLED)) {
             reminder.setMessage(userAnswer);
             userDataCache.setUsersCurrentBotState(userId, BotState.MENU_CHANGED);
+            reminder.setUserId(userId);
             reminderDao.addNewReminder(reminder);
             replyToUser = mainMenuService.getMainMenuMessage(chatId, "Profile filled");
-
+            userDataCache.deleteReminderFromCache(userId);
+            return replyToUser;
         }
 
         userDataCache.saveReminder(userId, reminder);

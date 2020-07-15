@@ -13,4 +13,5 @@ public interface DataCache {
 
     void saveReminder(long userId, Reminder reminder);
 
+    void deleteReminderFromCache(long userId);
 }

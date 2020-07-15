@@ -40,4 +40,8 @@ public class UserDataCache implements DataCache {
         reminderCache.put(userId, reminder);
     }
 
+    @Override
+    public void deleteReminderFromCache(long userId) {
+        reminderCache.remove(userId);
+    }
 }

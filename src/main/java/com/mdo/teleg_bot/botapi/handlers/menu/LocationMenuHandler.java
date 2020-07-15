@@ -21,7 +21,7 @@ import java.util.List;
 import static com.mdo.teleg_bot.staticdata.Messages.MY_LOCATION;
 
 @Component
-public class LocationMenu implements InputMessageHandler {
+public class LocationMenuHandler implements InputMessageHandler {
 
     final
     TimeZoneRestClient timeZoneRestClient;
@@ -29,7 +29,7 @@ public class LocationMenu implements InputMessageHandler {
     private final UserDao userDao;
     private ReplyMessageService messageService;
 
-    public LocationMenu(ReplyMessageService messageService, TimeZoneRestClient timeZoneRestClient, CityDao cityDao, UserDao userDao) {
+    public LocationMenuHandler(ReplyMessageService messageService, TimeZoneRestClient timeZoneRestClient, CityDao cityDao, UserDao userDao) {
         this.messageService = messageService;
         this.timeZoneRestClient = timeZoneRestClient;
         this.cityDao = cityDao;
@@ -48,17 +48,15 @@ public class LocationMenu implements InputMessageHandler {
             TimezoneOffsetResponse timezoneOffsetResponse = timeZoneRestClient.timeZone(city.getLatitude(), city.getLongitude());
             if(user != null){
                 userDao.updateUserByUserId(message.getFrom().getId(),timezoneOffsetResponse.getTimezoneOffset());
-                replyToUser = messageService.getReplyMessage(message.getChatId(), "reply.askReminder");
-                replyToUser.setReplyMarkup(getInlineMessageButtons());
             }else{
                 System.out.println(city.getLongitude() + "     " + city.getLatitude());
                 user = new User();
                 user.setUserLocation(timezoneOffsetResponse.getTimezoneOffset());
                 user.setUserId(message.getFrom().getId());
                 userDao.insertUserLocation(user);
-                replyToUser = messageService.getReplyMessage(message.getChatId(), "reply.askReminder");
-                replyToUser.setReplyMarkup(getInlineMessageButtons());
             }
+            replyToUser = messageService.getReplyMessage(message.getChatId(), "reply.askReminder");
+            replyToUser.setReplyMarkup(getInlineMessageButtons());
         }
         return replyToUser;
     }

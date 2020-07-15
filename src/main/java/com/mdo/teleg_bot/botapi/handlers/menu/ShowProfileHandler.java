@@ -9,11 +9,12 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
+import java.util.List;
+
 @Component
 public class ShowProfileHandler implements InputMessageHandler {
 
-    private final static String FINAL_MESSAGE = "Data on your reminder%n" +
-            "-------------------%n" +
+    private final static String FINAL_MESSAGE = "-------------------%n" +
             "Date: %s%n" +
             "Time: %s%n" +
             "Message: %s%n";
@@ -28,14 +29,20 @@ public class ShowProfileHandler implements InputMessageHandler {
 
     @Override
     public SendMessage handle(Message message) {
-        final int userId = message.getFrom().getId();
-        final Reminder reminder = userDataCache.getReminder(userId);
+        userDataCache.setUsersCurrentBotState(message.getFrom().getId(), BotState.ASK_REMINDER);  //at this moment nothing to do!
 
-        userDataCache.setUsersCurrentBotState(userId, BotState.MENU_CHANGED);
-        //reminderDao.addNewReminder(reminder);
+        List<Reminder> reminders = reminderDao.getAllRemindersByUserId(message.getFrom().getId());
+        String responseString = " ";
 
-        return new SendMessage(message.getChatId(), String.format(FINAL_MESSAGE,
-                reminder.getDate(), reminder.getTime(), reminder.getMessage()));
+        for (int i = 0; i < reminders.size(); i++) {
+            responseString += String.format(FINAL_MESSAGE,
+                    reminders.get(i).getDate(),
+                    reminders.get(i).getTime(),
+                    reminders.get(i).getMessage());
+        }
+
+
+        return new SendMessage(message.getChatId(), responseString);
     }
 
     @Override
