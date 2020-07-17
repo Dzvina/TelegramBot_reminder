@@ -39,9 +39,9 @@ public class FillingProfileHandler implements InputMessageHandler {
     @Override
     public SendMessage handle(Message message) {
         if (userDataCache.getUsersCurrentBotState(message.getFrom().getId()).equals(BotState.FILLING_PROFILE)) {
-            userDataCache.setUsersCurrentBotState(message.getFrom().getId(), BotState.ASK_LOCATION);
+            userDataCache.setUsersCurrentBotState(message.getFrom().getId(), BotState.ASK_DATE);
         }
-        return prosessUserInput(message);
+        return processUserInput(message);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class FillingProfileHandler implements InputMessageHandler {
         return BotState.FILLING_PROFILE;
     }
 
-    private SendMessage prosessUserInput(Message inputMsg) {
+    private SendMessage processUserInput(Message inputMsg) {
 
         String userAnswer = inputMsg.getText();
         int userId = inputMsg.getFrom().getId();
@@ -60,9 +60,6 @@ public class FillingProfileHandler implements InputMessageHandler {
 
         SendMessage replyToUser = null;
 
-//        if(botState.equals(BotState.FILLING_PROFILE)){
-//            userDataCache.setUsersCurrentBotState(userId, BotState.ASK_DATE);
-//        }
 
         if (botState.equals(BotState.ASK_DATE)) {
             replyToUser = messageService.getReplyMessage(chatId, "reply.askDate");

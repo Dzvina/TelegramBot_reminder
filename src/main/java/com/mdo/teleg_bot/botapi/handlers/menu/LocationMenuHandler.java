@@ -18,6 +18,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mdo.teleg_bot.botapi.handlers.inlinekeybordmenu.InlineKeyboardMenuHandler.getInlineMessageButtons;
 import static com.mdo.teleg_bot.staticdata.Messages.MY_LOCATION;
 
 @Component
@@ -38,7 +39,7 @@ public class LocationMenuHandler implements InputMessageHandler {
 
     @Override
     public SendMessage handle(Message message) {
-        SendMessage replyToUser = null;
+        SendMessage replyToUser;
         User user = userDao.getUserByUserId(message.getFrom().getId());
 
         if (message.getText().equals(MY_LOCATION)) {
@@ -66,24 +67,4 @@ public class LocationMenuHandler implements InputMessageHandler {
         return BotState.ASK_LOCATION;
     }
 
-    private InlineKeyboardMarkup getInlineMessageButtons() {
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-
-        InlineKeyboardButton buttonYes = new InlineKeyboardButton().setText("Yes");
-        InlineKeyboardButton buttonNo = new InlineKeyboardButton().setText("No");
-
-        buttonYes.setCallbackData("buttonYes");
-        buttonNo.setCallbackData("buttonNo");
-
-        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
-        keyboardButtonsRow1.add(buttonYes);
-        keyboardButtonsRow1.add(buttonNo);
-
-        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        rowList.add(keyboardButtonsRow1);
-
-        inlineKeyboardMarkup.setKeyboard(rowList);
-
-        return inlineKeyboardMarkup;
-    }
 }

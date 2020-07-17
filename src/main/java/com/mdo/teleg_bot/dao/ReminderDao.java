@@ -17,6 +17,7 @@ public class ReminderDao {
 
     public void addNewReminder(Reminder reminder) {
         String sql = "INSERT INTO REMINDER (user_id, message, date, time) value (?,?,?,?)";
+        System.out.println(reminder);
         jdbcTemplate.update(sql, reminder.getUserId(), reminder.getMessage(), reminder.getDate(), reminder.getTime());
     }
 

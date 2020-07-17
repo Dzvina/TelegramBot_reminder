@@ -29,7 +29,7 @@ public class ShowProfileHandler implements InputMessageHandler {
 
     @Override
     public SendMessage handle(Message message) {
-        userDataCache.setUsersCurrentBotState(message.getFrom().getId(), BotState.ASK_REMINDER);  //at this moment nothing to do!
+        //userDataCache.setUsersCurrentBotState(message.getFrom().getId(), BotState.ASK_REMINDER);  //at this moment nothing to do!
 
         List<Reminder> reminders = reminderDao.getAllRemindersByUserId(message.getFrom().getId());
         String responseString = " ";

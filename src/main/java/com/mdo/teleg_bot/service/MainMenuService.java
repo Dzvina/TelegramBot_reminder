@@ -88,8 +88,8 @@ public class MainMenuService {
 
 
         row1.add(new KeyboardButton(ADD_NEW_REMINDER));
-        row2.add(new KeyboardButton(MY_REMINDERS));
-        row3.add(new KeyboardButton(BACK));
+        row1.add(new KeyboardButton(MY_REMINDERS));
+        row2.add(new KeyboardButton(BACK));
 
         keyboard.add(row1);
         keyboard.add(row2);

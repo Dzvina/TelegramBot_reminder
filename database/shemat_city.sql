@@ -7,3 +7,6 @@ create table city
   latitude double,
   country varchar (255)
 );
+
+
+select sysdate() from city;
