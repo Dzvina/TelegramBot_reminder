@@ -12,13 +12,8 @@ import com.mdo.teleg_bot.service.ReplyMessageService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.mdo.teleg_bot.botapi.handlers.inlinekeybordmenu.InlineKeyboardMenuHandler.getInlineMessageButtons;
+import static com.mdo.teleg_bot.botapi.handlers.inlinekeybordmenu.InlineKeyboardMenuHandler.getInlineMessageButtonsAddReminder;
 import static com.mdo.teleg_bot.staticdata.Messages.MY_LOCATION;
 
 @Component
@@ -57,7 +52,7 @@ public class LocationMenuHandler implements InputMessageHandler {
                 userDao.insertUserLocation(user);
             }
             replyToUser = messageService.getReplyMessage(message.getChatId(), "reply.askReminder");
-            replyToUser.setReplyMarkup(getInlineMessageButtons());
+            replyToUser.setReplyMarkup(getInlineMessageButtonsAddReminder());
         }
         return replyToUser;
     }

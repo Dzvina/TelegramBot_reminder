@@ -13,7 +13,7 @@ import java.util.List;
 public class InlineKeyboardMenuHandler {
 
 
-    public static InlineKeyboardMarkup getInlineMessageButtons() {
+    public static InlineKeyboardMarkup getInlineMessageButtonsAddReminder() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton buttonYes = new InlineKeyboardButton().setText("Yes");
@@ -22,12 +22,30 @@ public class InlineKeyboardMenuHandler {
         buttonYes.setCallbackData("buttonYes");
         buttonNo.setCallbackData("buttonNo");
 
-        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
-        keyboardButtonsRow1.add(buttonYes);
-        keyboardButtonsRow1.add(buttonNo);
+        List<InlineKeyboardButton> keyboardButtons = new ArrayList<>();
+        keyboardButtons.add(buttonYes);
+        keyboardButtons.add(buttonNo);
 
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
-        rowList.add(keyboardButtonsRow1);
+        rowList.add(keyboardButtons);
+
+        inlineKeyboardMarkup.setKeyboard(rowList);
+
+        return inlineKeyboardMarkup;
+    }
+
+    public static InlineKeyboardMarkup getInlineMessageButtonsEditReminder(long reminderId) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+
+        InlineKeyboardButton buttonDelete = new InlineKeyboardButton().setText("Delete").setCallbackData("buttonDelete;" + reminderId);
+        InlineKeyboardButton buttonEdit = new InlineKeyboardButton().setText("Edit").setCallbackData("buttonEdit;" + reminderId);
+
+        List<InlineKeyboardButton> keyboardButtons = new ArrayList<>();
+        keyboardButtons.add(buttonDelete);
+        keyboardButtons.add(buttonEdit);
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(keyboardButtons);
 
         inlineKeyboardMarkup.setKeyboard(rowList);
 

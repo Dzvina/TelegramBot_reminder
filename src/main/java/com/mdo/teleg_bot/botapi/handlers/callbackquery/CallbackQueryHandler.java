@@ -5,6 +5,7 @@ import com.mdo.teleg_bot.botapi.BotStateContext;
 import com.mdo.teleg_bot.botapi.handlers.calendar.Calendar;
 import com.mdo.teleg_bot.cache.UserDataCache;
 import com.mdo.teleg_bot.client.TelegramRestClient;
+import com.mdo.teleg_bot.dao.ReminderDao;
 import com.mdo.teleg_bot.model.Reminder;
 import com.mdo.teleg_bot.service.MainMenuService;
 import org.springframework.stereotype.Component;
@@ -24,16 +25,19 @@ public class CallbackQueryHandler {
     private UserDataCache userDataCache;
     private MainMenuService mainMenuService;
     private Calendar calendar;
+    private ReminderDao reminderDao;
 
     public CallbackQueryHandler(BotStateContext botStateContext,
                                 UserDataCache userDataCache,
                                 MainMenuService mainMenuService,
-                                Calendar calendar, TelegramRestClient telegramRestClient) {
+                                Calendar calendar, TelegramRestClient telegramRestClient,
+                                ReminderDao reminderDao) {
         this.botStateContext = botStateContext;
         this.userDataCache = userDataCache;
         this.mainMenuService = mainMenuService;
         this.calendar = calendar;
         this.telegramRestClient = telegramRestClient;
+        this.reminderDao = reminderDao;
     }
 
 
@@ -107,6 +111,17 @@ public class CallbackQueryHandler {
             userDataCache.saveReminder(userId, reminder);
             callBackAnswer = new SendMessage(chatId, "Enter the reminder time. For example: HH:MM");
             userDataCache.setUsersCurrentBotState(userId, BotState.ASK_MESSAGE);
+        }
+
+        //From delete or edit reminder
+        else if (buttonQuery.getData().contains("buttonDelete")) {
+            String response = buttonQuery.getData();
+            String[] responseElements = response.split(";");
+            long reminderId = new Integer(responseElements[1]);
+            reminderDao.deleteReminderById(reminderId);
+            deleteMessage = new DeleteMessage(String.valueOf(chatId), messadeId);
+            telegramRestClient.deleteTelegramMessage(deleteMessage);
+            callBackAnswer = sendAnswerCallbackQuery("Your reminder has been deleted", false, buttonQuery);
 
         } else {
             userDataCache.setUsersCurrentBotState(userId, BotState.MENU_CHANGED);

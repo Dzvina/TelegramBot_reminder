@@ -34,16 +34,12 @@ public class TelegramFacade {
 
         if (update.hasCallbackQuery()) {
             CallbackQuery callbackQuery = update.getCallbackQuery();
-//            log.info("New callbackQuery from User: {}, userId: {}, with data: {}", update.getCallbackQuery().getFrom().getUserName(),
-//                    callbackQuery.getFrom().getId(), update.getCallbackQuery().getData());
             return callbackQueryHandler.processCallbackQuery(callbackQuery);
         }
 
 
         Message message = update.getMessage();
         if (message != null && message.hasText()) {
-            log.info("New message from User:{}, userId: {}, chatId: {},  with text: {}",
-                    message.getFrom().getUserName(), message.getFrom().getId(), message.getChatId(), message.getText());
             replyMessage = handleInputMessage(message);
         }
 

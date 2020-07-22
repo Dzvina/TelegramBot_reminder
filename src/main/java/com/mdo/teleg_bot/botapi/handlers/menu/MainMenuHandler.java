@@ -10,7 +10,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 
-import static com.mdo.teleg_bot.botapi.handlers.inlinekeybordmenu.InlineKeyboardMenuHandler.getInlineMessageButtons;
+import static com.mdo.teleg_bot.botapi.handlers.inlinekeybordmenu.InlineKeyboardMenuHandler.getInlineMessageButtonsAddReminder;
 import static com.mdo.teleg_bot.staticdata.Messages.*;
 
 @Component
@@ -50,7 +50,7 @@ public class MainMenuHandler implements InputMessageHandler {
             default:
                 replyToUser = messageService.getReplyMessage(message.getChatId(), "reply.askReminder");
                 userDataCache.setUsersCurrentBotState(message.getFrom().getId(), BotState.ASK_REMINDER);
-                replyToUser.setReplyMarkup(getInlineMessageButtons());
+                replyToUser.setReplyMarkup(getInlineMessageButtonsAddReminder());
                 break;
         }
         return replyToUser;

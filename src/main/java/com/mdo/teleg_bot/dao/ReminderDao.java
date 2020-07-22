@@ -26,4 +26,9 @@ public class ReminderDao {
         return jdbcTemplate.query(sql,new Object[]{userId}, new BeanPropertyRowMapper<>(Reminder.class));
     }
 
+    public void deleteReminderById(long reminderId){
+        String sql = "DELETE FROM reminder WHERE reminder_id = ?";
+        jdbcTemplate.update(sql, reminderId);
+    }
+
 }
